@@ -4,7 +4,7 @@ from sqlalchemy import exc
 import json
 from flask_cors import CORS
 
-from models import db_reset, setup_db, Drink, Ingredient, Property
+from models import *
 from auth import AuthError,requires_auth
 
 
@@ -21,7 +21,7 @@ def create_app(test=False):
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     app.route('/', methods=['GET']
-              )(lambda: jsonify({'message': 'Hello end-user!'}))
+              )(lambda: jsonify({'message': 'Welcome to sample Render backend!'}))
 
     @app.after_request
     def after_request(response):
@@ -42,7 +42,7 @@ def create_app(test=False):
         Returns:
             dict: A dictionary with success status and drinks list.
         """
-        drinks_row_list = [drink.short() for drink in Drink.query.all()]
+        drinks_row_list = [drink.short() for drink in Drinking.query.all()]
 
         return jsonify({
             'success': True,
@@ -53,14 +53,8 @@ def create_app(test=False):
     @requires_auth(permission='get:drinks-detail')
     def get_drinks_detail(payload=None):
         """Get all drinks detail.
-
-        Args:
-            payload (dict): Payload from Auth0.
-
-        Returns:
-            dict: A dictionary with success status and drinks list.
         """
-        drinks_row_list = [drink.long() for drink in Drink.query.all()]
+        drinks_row_list = [drink.long() for drink in Drinking.query.all()]
 
         return jsonify({
             'success': True,
@@ -70,19 +64,7 @@ def create_app(test=False):
     @app.route('/drinks/<int:id>', methods=['GET'])
     @requires_auth(permission='get:drinks-detail')
     def get_drink(payload, id):
-        """Get a drink.
-
-        Args:
-            payload (dict): Payload from Auth0.
-            id (int): Drink ID.
-
-        Returns:
-            dict: A dictionary with success status and drink.
-
-        Raises:
-            AuthError 404: If the drink is not found.
-        """
-        drink_row = Drink.query.filter(Drink.id == id).one_or_none()
+        drink_row = Drinking.query.filter(Drinking.id == id).one_or_none()
         if not drink_row:
             abort(code=404)
         return jsonify({
@@ -94,19 +76,13 @@ def create_app(test=False):
     @requires_auth(permission='post:drinks')
     def post_drink(payload=None):
         """Create a new drink.
-
-        Args:
-            payload (dict): Payload from Auth0.
-
-        Returns:
-            dict: A dictionary with success status and drink.
         """
         body = request.get_json()
         title = body.get('title', None)
         recipe = body.get('recipe', None)
         if not title and not recipe:
             abort(code=403)
-        drink = Drink(title=title, recipe=json.dumps(recipe))
+        drink = Drinking(title=title, recipe=json.dumps(recipe))
         drink.insert()
         return jsonify({
             'success': True,
@@ -116,20 +92,7 @@ def create_app(test=False):
     @app.route('/drinks/<int:id>', methods=['PATCH'])
     @requires_auth(permission='patch:drinks')
     def patch_drink(payload, id):
-        """Update a drink.
-
-        Args:
-            payload (dict): Payload from Auth0.
-            id (int): Drink ID.
-
-        Returns:
-            dict: A dictionary with success status and drink.
-
-        Raises:
-            AuthError 404: If the drink is not found.
-            AuthError 400: If title or recipe is not provided.
-        """
-        drink_row = Drink.query.filter(Drink.id == id).one_or_none()
+        drink_row = Drinking.query.filter(Drinking.id == id).one_or_none()
         if not drink_row:
             abort(code=404)
         body = request.get_json()
@@ -148,16 +111,7 @@ def create_app(test=False):
     @app.route('/drinks/<int:id>', methods=['DELETE'])
     @requires_auth(permission='delete:drinks')
     def delete_drink(payload, id):
-        """Delete a drink.
-
-        Args:
-            payload (dict): Payload from Auth0.
-            id (int): Drink ID.
-
-        Returns:
-            dict: A dictionary with success status and deleted drink ID.
-        """
-        drink_row = Drink.query.filter(Drink.id == id).one_or_none()
+        drink_row = Drinking.query.filter(Drinking.id == id).one_or_none()
         if not drink_row:
             abort(code=404)
         drink_row.delete()
@@ -174,11 +128,11 @@ def create_app(test=False):
         Returns:
             dict: A dictionary with success status and ingredients list.
         """
-        ingredients_row_list = [ingredient.format()
-                                for ingredient in Ingredient.query.all()]
+        metals_row_list = [ingredient.format()
+                                for ingredient in Metals.query.all()]
         return jsonify({
             'success': True,
-            'ingredients': ingredients_row_list
+            'ingredients': metals_row_list
         }), 200
 
     @app.route('/ingredients', methods=['POST'])
@@ -197,7 +151,7 @@ def create_app(test=False):
         density = body.get('density', None)
         if not name:
             abort(code=403)
-        ingredient = Ingredient(name=name, density=density)
+        ingredient = Metals(name=name, density=density)
         ingredient.insert()
         return jsonify({
             'success': True,
@@ -220,8 +174,8 @@ def create_app(test=False):
             AuthError 404: If the ingredient is not found.
             AuthError 400: If name is not provided.
         """
-        ingredient_row = Ingredient.query.filter(
-            Ingredient.id == id).one_or_none()
+        ingredient_row = Metals.query.filter(
+            Metals.id == id).one_or_none()
         if not ingredient_row:
             abort(code=404)
         body = request.get_json()
@@ -247,8 +201,8 @@ def create_app(test=False):
         Returns:
             dict: A dictionary with success status and deleted ingredient ID.
         """
-        ingredient_row = Ingredient.query.filter(
-            Ingredient.id == id).one_or_none()
+        ingredient_row = Metals.query.filter(
+            Metals.id == id).one_or_none()
         if not ingredient_row:
             abort(code=404)
         ingredient_row.delete()
@@ -276,4 +230,4 @@ with app.app_context():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=443)

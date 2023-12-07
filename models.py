@@ -18,13 +18,6 @@ def setup_db(app, database_path=None):
     return db
 
 
-'''
-db_reset()
-    drops the database tables and starts fresh
-    can be used to initialize a clean database
-'''
-
-
 def db_reset():
     db.drop_all()
     db.create_all()
@@ -79,7 +72,7 @@ a persistent ingredient entity, extends the base SQLAlchemy Model
 '''
 
 
-class Ingredient(db.Model):
+class Metals(db.Model):
     __tablename__ = 'ingredients'
     id = Column(Integer, primary_key=True)
     name = Column(String(80), unique=True)
@@ -104,13 +97,8 @@ class Ingredient(db.Model):
         }
 
 
-'''
-Drink
-a persistent drink entity, extends the base SQLAlchemy Model
-'''
 
-
-class Drink(db.Model):
+class Drinking(db.Model):
     __tablename__ = 'drinks'
     id = Column(Integer, primary_key=True)
     title = Column(String(80), unique=True)
@@ -121,10 +109,24 @@ class Drink(db.Model):
         backref=db.backref('drinks', lazy=True)
     )
 
-    '''
-    short()
-        short form representation of the Drink model
-    '''
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def long(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'recipe': json.loads(self.recipe)
+        }
 
     def short(self):
         print(json.loads(self.recipe))
@@ -135,59 +137,7 @@ class Drink(db.Model):
             'title': self.title,
             'recipe': short_recipe
         }
-
-    '''
-    long()
-        long form representation of the Drink model
-    '''
-
-    def long(self):
-        return {
-            'id': self.id,
-            'title': self.title,
-            'recipe': json.loads(self.recipe)
-        }
-
-    '''
-    insert()
-        inserts a new model into a database
-        the model must have a unique name
-        the model must have a unique id or null id
-        EXAMPLE
-            drink = Drink(title=req_title, recipe=req_recipe)
-            drink.insert()
-    '''
-
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
-
-    '''
-    delete()
-        deletes a new model into a database
-        the model must exist in the database
-        EXAMPLE
-            drink = Drink(title=req_title, recipe=req_recipe)
-            drink.delete()
-    '''
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    '''
-    update()
-        updates a new model into a database
-        the model must exist in the database
-        EXAMPLE
-            drink = Drink.query.filter(Drink.id == id).one_or_none()
-            drink.title = 'Black Coffee'
-            drink.update()
-    '''
-
-    def update(self):
-        db.session.commit()
-
+    
     def __repr__(self):
         return json.dumps(self.short())
 
