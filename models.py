@@ -63,11 +63,11 @@ def db_reset():
 Property = db.Table(
     'Property', db.Model.metadata,
     Column('drink_id', Integer, db.ForeignKey('drinks.id')),
-    Column('ingredient_id', Integer, db.ForeignKey('ingredients.id'))
+    Column('ingredient_id', Integer, db.ForeignKey('metals.id'))
 )
 
 '''
-Ingredient
+Metal
 '''
 
 
@@ -103,11 +103,10 @@ class Drinking(db.Model):
     title = Column(String(80), unique=True)
     recipe = Column(String(180), nullable=False)
     ingredients = db.relationship(
-        'Ingredient',
+        'Metal',
         secondary=Property,
         backref=db.backref('drinks', lazy=True)
     )
-
 
     def delete(self):
         db.session.delete(self)
@@ -128,7 +127,6 @@ class Drinking(db.Model):
         }
 
     def short(self):
-        print(json.loads(self.recipe))
         short_recipe = [{'color': r['color'], 'parts': r['parts']}
                         for r in json.loads(self.recipe)]
         return {
