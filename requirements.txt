@@ -16,8 +16,6 @@ mccabe
 platformdirs
 psycopg2-binary
 pyasn1
-pycodestyle
-pycrypto
 pylint
 python-jose
 rsa
