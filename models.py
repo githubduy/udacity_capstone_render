@@ -21,39 +21,39 @@ def setup_db(app, database_path=None):
 def db_reset():
     db.drop_all()
     db.create_all()
-    drink_water = Drink(
-        title='water',
+    drink_water = Drinking(
+        title='water lemon',
         recipe='[{"name": "water", "color": "blue", "parts": 1}]'
     )
 
-    drink_lemonade = Drink(
+    drink_lemonade = Drinking(
         title='lemonade',
         recipe='[{"name": "lemonade", "color": "yellow", "parts": 1}]'
     )
 
-    ingredient_water = Ingredient(
-        name='water',
+    matel_water_lemon = Drinking(
+        name='water lemon',
         density='100%'
     )
 
-    ingredient_lemonade = Ingredient(
+    ingredient_lemonade = Drinking(
         name='lemonade',
         density='80%'
     )
 
     new_property_water = Property.insert().values(
         drink_id=drink_water.id,
-        ingredient_id=ingredient_water.id,
+        ingredient_id=matel_water_lemon.id,
     )
 
     new_property_lemonade = Property.insert().values(
         drink_id=drink_water.id,
-        ingredient_id=ingredient_water.id,
+        ingredient_id=matel_water_lemon.id,
     )
 
     drink_water.insert()
     drink_lemonade.insert()
-    ingredient_water.insert()
+    matel_water_lemon.insert()
     ingredient_lemonade.insert()
     db.session.execute(new_property_water)
     db.session.execute(new_property_lemonade)
@@ -68,12 +68,11 @@ Property = db.Table(
 
 '''
 Ingredient
-a persistent ingredient entity, extends the base SQLAlchemy Model
 '''
 
 
 class Metals(db.Model):
-    __tablename__ = 'ingredients'
+    __tablename__ = 'metals'
     id = Column(Integer, primary_key=True)
     name = Column(String(80), unique=True)
     density = Column(String(4), nullable=False)
