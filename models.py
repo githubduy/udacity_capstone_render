@@ -103,7 +103,7 @@ class Drinking(db.Model):
     title = Column(String(80), unique=True)
     recipe = Column(String(180), nullable=False)
     ingredients = db.relationship(
-        'Metal',
+        'Metals',
         secondary=Property,
         backref=db.backref('drinks', lazy=True)
     )
