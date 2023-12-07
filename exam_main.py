@@ -5,7 +5,7 @@ import json
 from flask_cors import CORS
 
 from models import db_reset, setup_db, Drink, Ingredient, Property
-from auth import requires_auth
+from auth import AuthError,requires_auth
 
 
 def create_app(test=False):
