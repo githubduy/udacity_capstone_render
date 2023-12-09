@@ -35,7 +35,7 @@ def create_app(test=False):
         return response
 
     @app.route('/healthy', methods=['GET'])
-    def get_drinks(payload=None):
+    def get_healthy(payload=None):
         return jsonify({
             'success': True
         }), 200
