@@ -34,6 +34,12 @@ def create_app(test=False):
             'GET, POST, PATCH, DELETE, OPTIONS')
         return response
 
+    @app.route('/healthy', methods=['GET'])
+    def get_drinks(payload=None):
+        return jsonify({
+            'success': True
+        }), 200
+    
     @app.route('/drinks', methods=['GET'])
     @requires_auth(permission='get:drinks')
     def get_drinks(payload=None):
@@ -230,4 +236,4 @@ with app.app_context():
 
 
 if __name__ == '__main__':
-    app.run(debug=True,port=8000)
+    app.run(debug=True,port=10000)
