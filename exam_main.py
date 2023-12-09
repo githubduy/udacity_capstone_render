@@ -225,8 +225,6 @@ def create_app(test=False):
             "message": error.error
         }), error.status_code
 
-
-
     return app
 
 
@@ -238,4 +236,4 @@ with app.app_context():
 if __name__ == '__main__':
     app.debug = True
     app.host = "0.0.0.0"
-    app.run()
+    app.run(host = "0.0.0.0")
