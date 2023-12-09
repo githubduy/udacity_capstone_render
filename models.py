@@ -23,12 +23,12 @@ def db_reset():
     db.create_all()
     drink_water = Drinking(
         title='water lemon',
-        recipe='[{"name": "water", "color": "blue", "parts": 1}]'
+        recipe='[{"name": "water lemon", "color": "green", "parts": 1}]'
     )
 
     drink_lemonade = Drinking(
         title='lemonade',
-        recipe='[{"name": "lemonade", "color": "yellow", "parts": 1}]'
+        recipe='[{"name": "lemonade", "color": "blue", "parts": 1}]'
     )
 
     matel_water_lemon = Drinking(
