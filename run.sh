@@ -14,7 +14,7 @@ export DB_USER="adm"
 export DB_PASW="UvZK7UQhUbtZXccphztAIQjrenDNn71o"
 export DB_HOST="dpg-clo7u6uqc21c73e48vl0-a.singapore-postgres.render.com"
 export DB_PORT="5432"
-#export SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+export SQLALCHEMY_DATABASE_URI="postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME"
 export SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 echo "setup.sh script executed successfully!"
