@@ -31,12 +31,12 @@ def db_reset():
         recipe='[{"name": "lemonade", "color": "blue", "parts": 1}]'
     )
 
-    matel_water_lemon = Drinking(
+    matel_water_lemon = Metals(
         name='water lemon',
         density='100%'
     )
 
-    ingredient_lemonade = Drinking(
+    ingredient_lemonade = Metals(
         name='lemonade',
         density='80%'
     )
